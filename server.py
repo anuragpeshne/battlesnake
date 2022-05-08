@@ -7,7 +7,7 @@ import random
 from flask import Flask
 from flask import request
 
-from survival_utils import wall_collision, self_collision
+from survival_utils import wall_collision, self_collision, other_snakes_collision
 
 app = Flask(__name__)
 
@@ -53,12 +53,17 @@ def handle_move():
     you_data = data["you"]
     you_head = you_data["head"]
     you_body = you_data["body"]
+    you_id = you_data["id"]
+
+    other_snakes_body = [snake["body"] for snake in board_data["snakes"]
+                         if snake["id"] != you_id]
 
     possible_moves = ["up", "down", "left", "right"]
     safe_from_collision = [move
                            for move in possible_moves
                            if (not wall_collision(move, you_head, board_wth, board_ht) and
-                               not self_collision(move, you_body, you_head))]
+                               not self_collision(move, you_body, you_head) and
+                               not other_snakes_collision(move, other_snakes_body, you_head))]
 
     if len(safe_from_collision) == 0:
         print("no safe move, DIE")
@@ -85,6 +90,6 @@ def end():
 if __name__ == "__main__":
     logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
-    print("Starting Battlesnake Server...")
     port = int(os.environ.get("PORT", "8080"))
+    print(f"Starting Battlesnake Server on port {port}...")
     app.run(host="0.0.0.0", port=port, debug=True)

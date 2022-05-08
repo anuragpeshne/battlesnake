@@ -14,7 +14,20 @@ def wall_collision(move, head, board_wth, board_ht):
 def self_collision(move, body, head):
     body_coord_tuples = [(cell['x'], cell['y']) for cell in body]
     body_set = set(body_coord_tuples)
+    new_head_tuple = _get_new_head_pos(move, head)
 
+    return new_head_tuple in body_set
+
+def other_snakes_collision(move, other_snakes_body, head):
+    other_snakes_tuples = []
+    for snake_body in other_snakes_body:
+        other_snakes_tuples.extend([(cell['x'], cell['y']) for cell in snake_body])
+
+    new_head_tuple = _get_new_head_pos(move, head)
+
+    return new_head_tuple in other_snakes_tuples
+
+def _get_new_head_pos(move, head):
     if move == "down":
         new_head_tuple = (head['x'], head['y'] - 1)
     elif move == "right":
@@ -24,4 +37,4 @@ def self_collision(move, body, head):
     if move == "left":
         new_head_tuple = (head['x'] - 1, head['y'])
 
-    return new_head_tuple in body_set
+    return new_head_tuple
