@@ -1,0 +1,3 @@
+[submodule "battlesnake_env"]
+	path = battlesnake_env
+	url = https://github.com/anuragpeshne/battlesnake_env
