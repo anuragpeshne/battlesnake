@@ -28,11 +28,12 @@ def agent_get_action(state):
 
     if len(safe_from_collision) == 0:
         print("no safe move, DIE")
-        return {"move": "up"}
+        return "up"
 
     move = random.choice(safe_from_collision)
     return move
 
+initial_state = env.reset(train_mode=True)
 for i_episode in range(1):
     print("Episode:", i_episode)
     done = False
